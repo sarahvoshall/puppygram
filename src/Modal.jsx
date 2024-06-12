@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import capitalize from "./capitalize";
 
 const Modal = ({ isOpen, onClose, image, onNext, onPrev }) => {
   useEffect(() => {
@@ -29,13 +30,6 @@ const Modal = ({ isOpen, onClose, image, onNext, onPrev }) => {
 
   if (!isOpen) return null;
 
-  const capitalizeFirstLetter = (string) => {
-    return string
-      .split(" ")
-      .map((word) => word[0].toUpperCase() + word.slice(1))
-      .join(" ");
-  };
-
   const handleContentClick = (e) => {
     e.stopPropagation();
   };
@@ -48,7 +42,7 @@ const Modal = ({ isOpen, onClose, image, onNext, onPrev }) => {
         </span>
         <figure>
           <img src={image.image} alt="puppy" className="modal-image" />
-          <figcaption>{capitalizeFirstLetter(image.breed)}</figcaption>
+          <figcaption>{capitalize(image.breed)}</figcaption>
         </figure>
         <button className="modal-prev" onClick={onPrev}>
           &#8249;

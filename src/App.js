@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import api from "./api.js";
+import BreedSelect from "./BreedSelect";
+import SelectedBreeds from "./SelectedBreeds";
+import ImageGallery from "./ImageGallery";
 import Modal from "./Modal";
 import Footer from "./Footer.jsx";
-import Select from "react-select";
 
 function App() {
   const [breeds, setBreeds] = useState({});
@@ -25,29 +27,22 @@ function App() {
     fetchData();
   }, []);
 
-  const handleSelectChange = (selectedOption) => {
+  const handleSelectChange = async (selectedOption) => {
     const selectedBreed = selectedOption.value;
     if (!selectedBreeds.includes(selectedBreed)) {
       setSelectedBreeds([...selectedBreeds, selectedBreed]);
-    }
 
-    async function fetchImages() {
       try {
         const data = await api.getImages(selectedBreed);
         setImages((prevImages) => [...prevImages, ...data]);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching images:", error);
       }
     }
-
-    fetchImages();
   };
 
   const handleDeleteSelectedBreed = (selectedBreed) => {
-    setSelectedBreeds(
-      selectedBreeds.filter((breed) => breed !== selectedBreed)
-    );
-
+    setSelectedBreeds(selectedBreeds.filter((breed) => breed !== selectedBreed));
     setImages(images.filter((image) => image.breed !== selectedBreed));
   };
 
@@ -66,82 +61,17 @@ function App() {
   };
 
   const handlePrev = () => {
-    setSelectedImageIndex(
-      (prevIndex) => (prevIndex - 1 + images.length) % images.length
-    );
+    setSelectedImageIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
   };
-
-  const customStyles = {
-    control: (provided) => ({
-      ...provided,
-      maxWidth: 400, 
-    }),
-    menu: (provided) => ({
-      ...provided,
-      textAlign: "left", 
-    }),
-  };
-
-  const capitalizeFirstLetter = (string) => {
-    return string
-      .split(" ")
-      .map((word) => word[0].toUpperCase() + word.slice(1))
-      .join(" ");
-  };
-
-  const getOptionLabel = (option) => {
-    return capitalizeFirstLetter(option.label);
-  };
-
-  const breedOptions = Object.keys(breeds).flatMap((breed) =>
-    breeds[breed].length > 0
-      ? breeds[breed].map((subBreed) => ({
-          value: `${breed} ${subBreed}`,
-          label: `${breed} ${subBreed}`,
-        }))
-      : [{ value: breed, label: breed }]
-  );
 
   return (
     <div className="App">
       <header>
         <h1>Puppygram</h1>
-        <Select
-          options={breedOptions}
-          onChange={handleSelectChange}
-          placeholder="Select or search for a breed"
-          styles={customStyles}
-          getOptionLabel={getOptionLabel}
-        />
-        <div id="selected-breeds">
-          {selectedBreeds.map((breed, index) => (
-            <button
-              className="selected"
-              key={index}
-              onClick={() => handleDeleteSelectedBreed(breed)}
-            >
-              {capitalizeFirstLetter(breed)}{" "}
-              <span className="delete-selected">&times;</span>
-            </button>
-          ))}
-        </div>
+        <BreedSelect breeds={breeds} onSelectChange={handleSelectChange} />
+        <SelectedBreeds breeds={selectedBreeds} onDeleteBreed={handleDeleteSelectedBreed} />
       </header>
-      <div id="images-container">
-        {images.length > 0 ? (
-          images.map((image, index) => (
-            <>
-              <img
-                key={index}
-                alt={image.breed}
-                src={image.image}
-                onClick={() => handleOpenModal(index)}
-              />
-            </>
-          ))
-        ) : (
-          <p>No images.</p>
-        )}
-      </div>
+      <ImageGallery images={images} onOpenModal={handleOpenModal} />
       {isModalOpen && (
         <Modal
           isOpen={isModalOpen}
