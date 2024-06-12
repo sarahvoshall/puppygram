@@ -6,13 +6,12 @@ const api = {
     return data.message;
   },
 
-  // accepts an array of breeds
   async getImages(breed) {
     const url = breed.includes(" ")
       ? `https://dog.ceo/api/breed/${breed
           .split(" ")
-          .join("/")}/images/random/2`
-      : `https://dog.ceo/api/breed/${breed}/images/random/10`;
+          .join("/")}/images/random/6`
+      : `https://dog.ceo/api/breed/${breed}/images/random/6`;
 
     const response = await fetch(url);
     const data = await response.json();
@@ -22,7 +21,5 @@ const api = {
     });
   },
 };
-
-// api.getImages("akita")
 
 export default api;

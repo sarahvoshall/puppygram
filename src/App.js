@@ -1,9 +1,8 @@
-// App.js
-
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import api from "./api.js";
 import Modal from "./Modal";
+import Footer from "./Footer.jsx";
 import Select from "react-select";
 
 function App() {
@@ -75,11 +74,11 @@ function App() {
   const customStyles = {
     control: (provided) => ({
       ...provided,
-      maxWidth: 400, // Adjust the minimum width of the control
+      maxWidth: 400, 
     }),
     menu: (provided) => ({
       ...provided,
-      textAlign: "left", // Align options to the left
+      textAlign: "left", 
     }),
   };
 
@@ -137,7 +136,6 @@ function App() {
                 src={image.image}
                 onClick={() => handleOpenModal(index)}
               />
-              {/* <figcaption>{capitalizeFirstLetter(image.breed)}</figcaption> */}
             </>
           ))
         ) : (
@@ -153,29 +151,7 @@ function App() {
           onPrev={handlePrev}
         />
       )}
-      <footer>
-        <p>
-          🐶 Images provided by{" "}
-          <a
-            href="https://dog.ceo/dog-api/documentation/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Dog API
-          </a>
-        </p>
-        <p>
-          👩🏻‍💻 Coded in 2024 by{" "}
-          <a
-            href="https://www.sashvosh.com"
-            target="_blank"
-            rel="noopener
-            noreferrer"
-          >
-            Sarah Voshall
-          </a>
-        </p>
-      </footer>
+      <Footer />
     </div>
   );
 }
